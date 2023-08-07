@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,12 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+    });
+
+    Route::prefix('cart')->middleware(['auth:sanctum'])->group(function () {
+        Route::post('/items', [CartController::class, 'add']);
+        Route::put('/items/{cart}', [CartController::class, 'update']);
+        Route::get('/items/{cart}', [CartController::class, 'show']);
+        Route::delete('/items/{product}', [CartController::class, 'delete']);
     });
 });
