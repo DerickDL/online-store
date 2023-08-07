@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\QueryException;
 class CartController extends Controller
 {
     /**
-     * create a new Cart or add a quantity to existing cart item
+     * Create a new Cart or add a quantity to existing cart item
      */
     public function add(CartRequest $cartRequest)
     {
@@ -39,7 +39,7 @@ class CartController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified cart
      */
     public function show(Cart $cart)
     {
@@ -47,7 +47,7 @@ class CartController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a cart item
      */
     public function update(CartRequest $cartRequest, Cart $cart)
     {
@@ -57,7 +57,7 @@ class CartController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a specified cart item
      */
     public function delete(Request $request, string $product_id)
     {

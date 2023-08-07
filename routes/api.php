@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('cart')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/items', [CartController::class, 'add']);
         Route::put('/items/{cart}', [CartController::class, 'update']);
-        Route::get('/items/{cart}', [CartController::class, 'show']);
+        Route::get('/items/{cart}', [CartController::class, 'show'])->middleware('can:view');
         Route::delete('/items/{product}', [CartController::class, 'delete']);
     });
 });
