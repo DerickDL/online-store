@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
+use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Cart;
+use App\Models\Product;
 
 
 /*
@@ -36,7 +38,12 @@ Route::prefix('v1')->group(function () {
     Route::prefix('cart')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/items', [CartController::class, 'add']);
         Route::put('/items', [CartController::class, 'update']);
-        Route::get('/items/{cart}', [CartController::class, 'view'])->can('view', 'cart');;
+        Route::get('/items/{cart}', [CartController::class, 'view'])->can('view', 'cart');
         Route::delete('/items', [CartController::class, 'delete']);
+    });
+
+    Route::prefix('products')->middleware(['auth:sanctum'])->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/{product}', [ProductController::class, 'view']);
     });
 });
