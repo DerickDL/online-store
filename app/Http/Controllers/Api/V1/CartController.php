@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Http\Requests\CartRequest;
+use App\Http\Requests\DeleteCartRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\QueryException;
 
@@ -41,16 +42,18 @@ class CartController extends Controller
     /**
      * Display the specified cart
      */
-    public function show(Cart $cart)
+    public function show(Request $request)
     {
+        $cart = $request->user()->cart;
         return response()->json($cart->items);
     }
 
     /**
      * Update a cart item
      */
-    public function update(CartRequest $cartRequest, Cart $cart)
+    public function update(CartRequest $cartRequest)
     {
+        $cart = $cartRequest->user()->cart;
         $request = $cartRequest->validated();
         $cart->items()->syncWithoutDetaching([$request['product_id'] => ['quantity' => $request['quantity']]]);
         return response()->json(['message' => 'Cart item updated successfully'], 200);
@@ -59,12 +62,13 @@ class CartController extends Controller
     /**
      * Remove a specified cart item
      */
-    public function delete(Request $request, string $product_id)
+    public function delete(DeleteCartRequest $request)
     {
         try {
             $user = $request->user();
             $cart = $user->cart;
-            $product = Product::findOrFail($product_id);
+            $productRequest = $request->validated();
+            $product = Product::findOrFail($productRequest['product_id']);
             $cart->items()->detach($product);
             return response()->json(['message' => 'Item removed from cart']);
         } catch (ModelNotFoundException $e) {
