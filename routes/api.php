@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\Cart;
 
 
 /*
@@ -35,7 +36,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('cart')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/items', [CartController::class, 'add']);
         Route::put('/items', [CartController::class, 'update']);
-        Route::get('/items', [CartController::class, 'show']);
+        Route::get('/items/{cart}', [CartController::class, 'view'])->can('view', 'cart');;
         Route::delete('/items', [CartController::class, 'delete']);
     });
 });

@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Http\Requests\CartRequest;
 use App\Http\Requests\DeleteCartRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\QueryException;
+use Illuminate\Support\Facades\Gate;
 
 class CartController extends Controller
 {
@@ -42,9 +42,8 @@ class CartController extends Controller
     /**
      * Display the specified cart
      */
-    public function show(Request $request)
+    public function view(Request $request, Cart $cart)
     {
-        $cart = $request->user()->cart;
         return response()->json($cart->items);
     }
 
