@@ -44,7 +44,10 @@ class CartController extends Controller
      */
     public function view(Request $request, Cart $cart)
     {
-        return response()->json($cart->items);
+        return response()->json([
+            'items' => $cart->items,
+            'total_price' => $cart->total_price
+        ]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
+use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,5 +46,10 @@ Route::prefix('v1')->group(function () {
     Route::prefix('products')->middleware(['auth:sanctum'])->group(function () {
         Route::get('/', [ProductController::class, 'index']);
         Route::get('/{product}', [ProductController::class, 'view']);
+    });
+
+    Route::prefix('orders')->middleware(['auth:sanctum'])->group(function () {
+        Route::post('/', [OrderController::class, 'create']);
+        Route::get('/{order}', [OrderController::class, 'view'])->can('view', 'order');
     });
 });

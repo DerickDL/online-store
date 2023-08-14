@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -28,5 +28,13 @@ class Cart extends Model
     public function items()
     {
         return $this->belongsToMany(Product::class, 'cart_items')->withPivot('quantity');
+    }
+
+
+    public function getTotalPriceAttribute()
+    {
+        return $this->items->sum(function ($item) {
+            return $item->pivot->quantity * $item->price;
+        });
     }
 }
