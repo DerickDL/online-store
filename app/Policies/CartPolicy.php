@@ -17,4 +17,14 @@ class CartPolicy
                     ? Response::allow()
                     : Response::deny('You do not own this cart.');
     }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function create(User $user): Response
+    {
+        return $user->id === 'admin'                 
+                    ? Response::allow()
+                    : Response::deny('You do not own this cart.');
+    }
 }

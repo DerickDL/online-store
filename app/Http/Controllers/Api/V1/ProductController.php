@@ -22,7 +22,7 @@ class ProductController extends Controller
     /**
      * Get a specific product
      */
-    public function view(string $productId)
+    public function view(int $productId)
     {
         try{
             return new ProductResource(Product::findOrFail($productId));

@@ -19,7 +19,8 @@ class RegisterTest extends TestCase
         $response = $this->post('/api/v1/auth/register', [
             'name'  => 'John Doe',
             'email' => 'johndoe@gmail.com',
-            'password' => 'Qwerty+123'
+            'password' => 'Qwerty+123',
+            'role' => 'user'
         ]);
 
         $response->assertStatus(201);

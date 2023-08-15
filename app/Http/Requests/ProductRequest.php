@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\Rule;
 
-class RegisterRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,15 +23,9 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => [
-                'required', 
-                Password::min(8)
-                ->mixedCase()
-                ->numbers()
-                ->symbols()
-            ],
-            'role'  => ['required', Rule::in(['user', 'admin'])]
+            'description' => ['required', 'string'],
+            'price' => ['required', 'decimal:2'],
+            'stock_quantity' => ['required', 'integer'],
         ];
     }
 }

@@ -17,7 +17,7 @@ class CartController extends Controller
     /**
      * Create a new Cart or add a quantity to existing cart item
      */
-    public function add(CartRequest $cartRequest)
+    public function create(CartRequest $cartRequest)
     {
         try {
             $request = $cartRequest->validated();
@@ -64,13 +64,12 @@ class CartController extends Controller
     /**
      * Remove a specified cart item
      */
-    public function delete(DeleteCartRequest $request)
+    public function destroy(Request $request, int $id)
     {
         try {
             $user = $request->user();
             $cart = $user->cart;
-            $productRequest = $request->validated();
-            $product = Product::findOrFail($productRequest['product_id']);
+            $product = Product::findOrFail($id);
             $cart->items()->detach($product);
             return response()->json(['message' => 'Item removed from cart']);
         } catch (ModelNotFoundException $e) {

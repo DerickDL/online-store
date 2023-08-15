@@ -4,10 +4,12 @@ use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\Admin\ProductController as AdminProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\User;
 
 
 /*
@@ -21,35 +23,40 @@ use App\Models\Product;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware(['auth:sanctum'])->group(function () {
 
-Route::prefix('v1')->group(function () {
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-    Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/auth/logout', [AuthController::class, 'logout']);
-    });
-
-    Route::prefix('auth')->group(function () {
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/login', [AuthController::class, 'login']);
-    });
-
-    Route::prefix('cart')->middleware(['auth:sanctum'])->group(function () {
-        Route::post('/items', [CartController::class, 'add']);
+    // Carts routes
+    Route::prefix('cart')->group(function () {
+        Route::post('/items', [CartController::class, 'create']);
         Route::put('/items', [CartController::class, 'update']);
         Route::get('/items/{cart}', [CartController::class, 'view'])->can('view', 'cart');
-        Route::delete('/items', [CartController::class, 'delete']);
+        Route::delete('/items/{product}', [CartController::class, 'destroy']);
     });
 
-    Route::prefix('products')->middleware(['auth:sanctum'])->group(function () {
+    // Products routes
+    Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index']);
         Route::get('/{product}', [ProductController::class, 'view']);
     });
 
+    // Orders Routes
     Route::prefix('orders')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/', [OrderController::class, 'create']);
         Route::get('/{order}', [OrderController::class, 'view'])->can('view', 'order');
     });
+
+    Route::prefix('admin/products')->middleware(['auth:sanctum'])->group(function () {
+        Route::post('/', [AdminProductController::class, 'create']);
+        Route::put('/{product}', [AdminProductController::class, 'update']);
+        Route::delete('/{product}', [AdminProductController::class, 'destroy']);
+    });
+
 });
+
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
